@@ -9,7 +9,8 @@ pipeline {
       }
       stage('Docker Build') {
          steps {
-            sh(script: 'docker compose build')
+         // Use bat for Windows instead of sh
+         bat 'docker build -t azure-voting-app-redis .'
          }
       }
    }
