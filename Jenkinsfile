@@ -16,7 +16,7 @@ pipeline {
       stage('Start App')  {
          steps {
          // Use bat for Windows instead of sh
-         bat 'docker run -d -p 80:80 --name azure-voting-app-redis azure-voting-app-redis'
+         bat 'docker run -d --rm -p 80:80 --name azure-voting-app-redis azure-voting-app-redis'
          }
       }
       stage ('Run Tests') {
