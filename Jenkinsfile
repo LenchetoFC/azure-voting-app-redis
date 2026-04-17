@@ -56,19 +56,19 @@ pipeline {
         These Clair stages won't work bc I don't have servers set up like Blackdentech.
         This code is just for 'following along' purposes
       */
-      stage('Run Clair') {
-        agent {label 'build-2'}
-        steps {
-          bat 'docker run -p 5432:5432 -d --name db arminc/clair-db:latest'
-          bat 'docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:latest'
-        }
-      }
-      stage('Run Clair scan') {
-        agent {label 'build-2'}
-        steps {
-          bat '/home/ubuntu/go/bin/clair-scanner --ip=172.17.0.1 blackdentech/jenkins-courses:2023'
-        }
-      }
+      // stage('Run Clair') {
+      //   agent {label 'build-2'}
+      //   steps {
+      //     bat 'docker run -p 5432:5432 -d --name db arminc/clair-db:latest'
+      //     bat 'docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:latest'
+      //   }
+      // }
+      // stage('Run Clair scan') {
+      //   agent {label 'build-2'}
+      //   steps {
+      //     bat '/home/ubuntu/go/bin/clair-scanner --ip=172.17.0.1 blackdentech/jenkins-courses:2023'
+      //   }
+      // }
    }
    post{
       always {
