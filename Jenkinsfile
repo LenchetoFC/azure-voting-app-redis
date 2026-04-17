@@ -40,15 +40,16 @@ pipeline {
       }
       stage('Docker Push') {
         steps {
-          echo "Running in $WORKSPACE"
-          dir ("$WORKSPACE/azure-vote") {
             script {
-              docker.withRegistry('', 'dockerhub') {
-                def image = docker.build('lramirezjr/jenkins-course:2023')
-                image.push()
-              }
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    bat '''
+                        docker tag azure-voting-app-redis %DOCKER_USER%/jenkins-course:2023
+                        docker login -u %DOCKER_USER% -p %DOCKER_PASS%
+                        docker push %DOCKER_USER%/jenkins-course:2023
+                        docker logout
+                    '''
+                }
             }
-          }
         }
       }
    }
