@@ -24,7 +24,7 @@ pipeline {
          bat 'docker run -d --rm -p 80:80 --name azure-voting-app-redis azure-voting-app-redis'
          }
       }
-      stage ('Run Tests') {
+      stage('Run Tests') {
          steps {
          // Use bat for Windows instead of sh
          bat 'docker exec azure-voting-app-redis pytest /tests/test_sample.py'
@@ -37,6 +37,20 @@ pipeline {
                echo "Tests failed :("
             }
          }
+      }
+      stage('Docker Push') {
+        steps {
+            script {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    bat '''
+                        docker tag azure-voting-app-redis %DOCKER_USER%/jenkins-course:2023
+                        docker login -u %DOCKER_USER% -p %DOCKER_PASS%
+                        docker push %DOCKER_USER%/jenkins-course:2023
+                        docker logout
+                    '''
+                }
+            }
+        }
       }
    }
    post{
