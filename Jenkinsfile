@@ -24,7 +24,7 @@ pipeline {
          bat 'docker run -d --rm -p 80:80 --name azure-voting-app-redis azure-voting-app-redis'
          }
       }
-      stage ('Run Tests') {
+      stage('Run Tests') {
          steps {
          // Use bat for Windows instead of sh
          bat 'docker exec azure-voting-app-redis pytest /tests/test_sample.py'
@@ -37,6 +37,19 @@ pipeline {
                echo "Tests failed :("
             }
          }
+      }
+      stage('Docker Push') {
+        steps {
+          echo "Running in $WORKSPACE"
+          dir ("$WORKSPACE/azure-vote") {
+            script {
+              docker.withRegistry('', 'dockerhub') {
+                def image = docker.build('lramirezjr/jenkins-course:2023')
+                image.push()
+              }
+            }
+          }
+        }
       }
    }
    post{
